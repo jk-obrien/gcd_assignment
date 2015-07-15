@@ -22,7 +22,6 @@ zip_file <- "getdata_projectfiles_UCI HAR Dataset.zip"
 url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 
-
 # Define a helper function to download and unpack the zip file if necessary.
 checkZip <- function() {
 
@@ -38,7 +37,6 @@ checkZip <- function() {
     message("Unzipping...")
     unzip(zip_file)
 }
-
 
 
 # This is the main function. It looks for the data files, calling the helper
@@ -64,5 +62,10 @@ fetchData <- function() {
     }
 }
 
+
 # Call the main function above.
 fetchData()
+
+
+# Clean up objects that will no longer be needed.
+rm(list=c("url", "zip_file", "fetchData", "checkZip"))
