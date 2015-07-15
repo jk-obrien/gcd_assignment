@@ -2,4 +2,5 @@ getdata_projectfiles_UCI\ HAR\ Dataset.zip
 UCI\ HAR\ Dataset/
 .RData
 .Rhistory
+README.html
 *.bck
