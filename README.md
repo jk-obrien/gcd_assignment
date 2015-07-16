@@ -43,11 +43,11 @@ couldn't all be rolled up into one.
                     
 * fetch_data.R
 
-    Downloads and unzips the data files.
+    Downloads and unzips the data files. Then makes a list of all data files.
 
 * merge_data.R
 
-    Reads the various data files into a single R object.
+    Reads the various data files and merges the data into a single R object.
 
 * subset_data.R
 
