@@ -28,48 +28,12 @@ this project are described here. A full description of the entire dataset can be
 read [here](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
 
 
-## Scripts
+## Project files
 
-The following R scripts were used to complete this project.
-
-* run_analysis.R
-
-    This is the main script that calls all other scripts below in turn.
-    
-    The scripts are really only split up for modularity, there's no reason they
-couldn't all be rolled up into one.
-
-    As each script is called by run_analysis.R it creates R objects that remain in the environment for use by subsequent scripts. Each script takes care of tidying up after itself, only leaving behind objects that are needed downstream.
-                    
-* fetch_data.R
-
-    Downloads and unzips the data files. Then makes a list of all data files.
-
-* merge_data.R
-
-    Reads the various data files and merges the data into a single R object.
-
-* subset_data.R
-
-    Extracts the variables required for the project.
-
-* name_activities.R
-
-    Give descriptive names to the activities in the dataset.
-
-* label_data.R
-
-    Assign descriptive labels to the variables in the dataset.
-
-* summarize_data.R
-
-    Produce means of each variable by subject and activity.
-
-## Other files
-
-* README.md    - This file.
-* .git         - The directory used by the version control software git.
-* .gitignore   - A list of files not covered by git.
-* CodeBook.txt - A description of the variables in the final data set.
-* Final.txt    - The data produced as an end result of this assignment.
+* run_analysis.R - The R script that does the work.
+* README.md      - This file.
+* .git           - The directory used by the version control software git.
+* .gitignore     - A list of files not covered by git.
+* CodeBook.txt   - A description of the variables in the final data set.
+* Final.txt      - The data produced as an end result of this assignment.
 
