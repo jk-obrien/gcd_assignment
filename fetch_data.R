@@ -34,6 +34,9 @@ data_files <- list.files(getwd(), pattern="[.]txt$", recursive=TRUE)
 # A few .txt files aren't data files, so get rid of those.
 data_files <- data_files[grep("CodeBook|README|_info", data_files, invert=TRUE)]
 
+# And some .txt files aren't needed (lower-level) for this assignment.
+data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
+
 
 # Clean up objects that will no longer be needed.
 rm(list=c("url", "zip_file"))
