@@ -19,11 +19,15 @@ The script file is fully commented, giving a detailed description of how it
 works. The basic outline is this:
 
 1. Downloads the project data zip file and unzips it.
-2. Reads the data files then merges the training and test sets.
-3. Labels the data set variables.
+2. Reads the data files into memory then merges the training and test sets.
+3. Labels the data set variables (columns) using features.txt.
 4. Replaces the activity codes in the data with descriptive text labels.
-5. Selects a subset of the data set variables.
-6. Reshapes the data into long format and produces averages of every feature. 
+5. Selects the subset of the data set variables that give means and standard
+   deviations for the features.
+6. Produces averages of every feature's mean and std by subject and activity.
+7. Reshapes the data into long format, using subject_id, activity and feature as
+   key variables and the two mean statistic columns as values.
+8. Saves the output of step 7 into a tab-delimited text file called Final.txt.
 
 The rest of this file gives a description of the scripts and files used in the
 project.
