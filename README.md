@@ -13,6 +13,16 @@ the R scripts and then call
 
 > R < run_analysis.R
 
+The script file is fully commented, giving a detailed description of how it 
+works. The basic outline is this:
+
+1. Downloads the project data zip file and unzips it.
+2. Merges the training and test sets.
+3. Labels the data set variables.
+4. Replaces the activity codes in the data with descriptive text labels.
+5. Selects a subset of the data set variables.
+6. Produces averages of every numeric variable. 
+
 The rest of this file gives a description of the scripts and files used in the
 project.
 
@@ -28,7 +38,7 @@ this project are described here. A full description of the entire dataset can be
 read [here](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
 
 
-## Project files
+## Project Files
 
 * run_analysis.R - The R script that does the work.
 * README.md      - This file.
@@ -36,4 +46,3 @@ read [here](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Us
 * .gitignore     - A list of files not covered by git.
 * CodeBook.txt   - A description of the variables in the final data set.
 * Final.txt      - The data produced as an end result of this assignment.
-
