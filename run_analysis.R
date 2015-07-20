@@ -214,4 +214,4 @@ averages_dt <- smaller_dt %>%
                group_by(subj_id, activity) %>%
                summarise_each(funs(mean), -set_label)
 
-write.table(averages_dt, "final_output.txt", sep="\t", row.names=FALSE)
+write.table(averages_dt, "Final.txt", sep="\t", row.names=FALSE)
