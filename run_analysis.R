@@ -1,7 +1,7 @@
 # This script performs the analysis required for the assignment. It is broken
-# into five sections, each corresponding to the five steps listed in the
-# assignment instructions. The order of those steps has been changed slightly
-# and a zeroth step has been added. The new order of steps is given here.
+# into sections, one for each of the steps listed in the project instructions.
+# The order of those steps has been changed slightly and a zeroth step has been
+# added. The new order of steps is given here.
 
 # 0) Download and unpack the data zip file.
 # 1) Merge the training and the test sets to create one data set.
@@ -9,11 +9,11 @@
 # 3) Use descriptive activity names to name the activities in the data set.
 # 4) Extract only the measurements on the mean and standard deviation for each
 #    measurement.
-# 5) From the data set in step 4, creates a second, independent tidy data set
+# 5) From the data set in step 4, create a second, independent tidy data set
 #    with the average of each variable for each activity and each subject.
 
 
-#####                     Get Data Files                                   #####
+#####                            Get Data Files                            #####
 #                                                                              #
 # In this section the script looks for the project zip file and unzips it. If  #
 # the zip file is missing it downloads it from the original source and then    #
@@ -42,7 +42,7 @@ if (!file.exists(zip_file)) {
 
 # Then unzip the contents.
 message("Unzipping...")
-#unzip(zip_file)
+unzip(zip_file)
 
 # Clean up objects that will no longer be needed.
 rm(list=c("url", "zip_file"))
@@ -59,7 +59,7 @@ data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
 
 
 
-#####                       Merge Data                                     #####
+#####                              Merge Data                              #####
 #                                                                              #
 # In this section the script reads all the text files into R objects. Since    #
 # the basenames of the text files are unique, the script uses these to name    #
@@ -84,7 +84,7 @@ for (i in 1:length(var_names)) {
 }
 
 # Tidy as we go.
-#rm(list=c("var_names", "data_files", "i"))
+rm(list=c("var_names", "data_files", "i"))
 
 
 # Now we have all our data, it's time to start merging it together. The two
@@ -101,13 +101,13 @@ big_dt <- data.table(
     rbind(X_test, X_train)
 )
 
-#rm(list=c("X_train", "y_train","subject_train",
-#          "X_test",  "y_test", "subject_test" )
-#)
+rm(list=c("X_train", "y_train","subject_train",
+          "X_test",  "y_test", "subject_test" )
+)
 
 
 
-#####                     Set Variable Names                               #####
+#####                          Set Variable Names                          #####
 #                                                                              #
 # The file "UCI HAR Dataset/features.txt" holds the variable names for X_test  #
 # and X_train, but they need a little cleaning up.                             #
@@ -126,17 +126,10 @@ end <- length(names(big_dt))
 setnames(big_dt, names(big_dt)[4:end], features)
 
 # Tidy up before moving on.
-#rm("features", "end")
+rm("features", "end")
 
 
-#################
-# GOOD TO HERE. #
-# I THINK!      #
-#################
-
-
-
-#####                    Descriptive Activity Labels                       #####
+#####                     Descriptive Activity Labels                      #####
 #                                                                              #
 # The file "UCI HAR Dataset/activity_labels.txt" maps the codes used in the    #
 # data files to descriptive text labels. So use this to replace the codes in   #
@@ -145,30 +138,72 @@ setnames(big_dt, names(big_dt)[4:end], features)
 #####                                                                      #####
 
 # Map the activity labels to the id codes in a new vector.
-#act_label <- activity_labels$V2[full_set$activity_id]
+act_label <- activity_labels$V2[big_dt$activity_id]
 
-# Add the new column on the left of the "full_set" data frame.
-#full_set <- cbind(data.frame(activity=act_label), full_set)
+# Add the new column to the "big_dt" data table and remove the activity_id
+# column.
+library(dplyr)
+big_dt <- mutate(big_dt, activity=act_label, activity_id=NULL)
 
 # Keep things tidy.
-#rm(list=c("act_label", "activity_labels"))
+rm(list=c("act_label", "activity_labels"))
 
 
 
 #####                   Extract means & std. deviations                    #####
 #                                                                              #
-# We're only interested in the variables concerning means and standard         #
-# deviations (as well as the subject_id, activity label and data set label, of #
-# course). So make a vector listing just that subset of "full_set" columns and #
-# use it to extract those columns into a smaller data frame.                   #
+# We're only interested in variables concerning means or standard deviations   #
+# (as well as the subject_id, activity label and data set label, of course).   #
+# So make a vector listing just that subset of "big_dt" columns and use it to  #
+# extract those columns into a smaller data frame.                             #
+#                                                                              #
+# By inspection of the output of names(big_dt), we don't just want any         #
+# variable with the string "mean" in its name. There are many cases of         #
+# variables with the same root name but differing by the name of a summary     #
+# statistic, e.g. tBodyAcc_mean_Y, tBodyAcc_std_Y, tBodyAcc_min_Y, etc. These  #
+# "mean" and "std" variables are the variables we need to select.              #
+#                                                                              #
+# In other cases some variables have the string "mean" in their names, but     #
+# there is no corresponding variable with "std" variable. For example,         #
+# angletBodyGyroJerkMean_gravityMean. We don't want these variables.           #
 #                                                                              #
 #####                                                                      #####
 
-# Use a regexp to make the vector list.
-#regexp <- "activity|_id|_set|mean|_std_"
-#subset <- grep(regexp, names(full_set), ignore.case=TRUE, value=TRUE)
 
-# Pull those columns from "full_set".
-#slim_df <- full_set[,subset]
+# From experimentation, this regular expression will select our variable list:
+# an underscore, followed by the string "mean" or "std", followed by another
+# underscore or the end of the string.
+regexp <- "_(mean|std)(_|$)"
+subset <- grep(regexp, names(big_dt), ignore.case=TRUE, value=TRUE)
 
-#rm(list=c("full_set", "subset"))
+# For easier legibility pair up each "mean" with its corresponding "std".
+mean_vec <- grep("mean", subset, value=TRUE)
+std_vec  <- grep("std",  subset, value=TRUE)
+subset <- as.vector(rbind(mean_vec, std_vec))
+
+# Don't forget our subject/activity/data-set identifiers.
+subset <- c("subj_id", "activity", "set_label", subset)
+
+# Pull those columns from "big_dt".
+smaller_dt <- select(big_dt, one_of(subset))
+
+rm(list=c("big_dt", "subset", "mean_vec", "std_vec"))
+
+
+
+#####                   Average by Activity and Subject                    #####
+#                                                                              #
+# Use the dplyr function "summarise_each to get the mean of each column,       #
+# except the two grouping columns, subj_id and activity and the set_label      #
+# column which is a character vector.                                          #
+#                                                                              #
+# Write this final data set to a text file.                                    #
+#                                                                              #
+#####                                                                      #####
+
+averages_dt <- smaller_dt %>%
+               group_by(subj_id, activity) %>%
+               summarise_each(funs(mean), -set_label)
+
+write.table(averages_dt, "final_output.txt", sep="\t")
+
