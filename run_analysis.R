@@ -18,6 +18,7 @@ library(tidyr,      warn.conflicts=FALSE)
 library(dplyr,      warn.conflicts=FALSE)
 
 
+
 #####                           Get Data Files                             #####
 #                                                                              #
 # In this section the script looks for the project zip file and unzips it. If  #
@@ -31,17 +32,17 @@ library(dplyr,      warn.conflicts=FALSE)
 
 
 # First define two constants, holding the relative path to the zip file, and
-# the download url for the zipfile.
+# the download url for the zip file.
 zip_file <- "getdata_projectfiles_UCI HAR Dataset.zip"
 url <- paste0(
     "https://d396qusza40orc.cloudfront.net/",
     "getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 )
 
-# Make sure the zip file is present.
+# See if the zip file is already present.
 if (!file.exists(zip_file)) {
 
-    # If not download it.
+    # If it's not, then download it.
     message("Downloading...")
     download.file(url, zip_file, method="curl", quiet=TRUE)
 }
@@ -70,7 +71,7 @@ data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
 #                                                                              #
 # In this section the script reads all the text files into R objects. Since    #
 # the basenames of the text files are unique, the script uses these to name    #
-# each object. The script then merges them all into a single data.frame.       #
+# each object. The script then merges them all into a single data frame.       #
 #                                                                              #
 # See "UCI HAR Dataset/README.txt" for a description of how the data files are #
 # related to each other.                                                       #
@@ -79,12 +80,12 @@ data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
 
 
 
-# Make a list of the basenames of the files - without the .txt extension.
+# Make a list of the base names of the files - without the .txt extension.
 var_names <- sub("([^.]+)[.]txt$", "\\1", basename(data_files))
 
-# This loop reads the contents of each file into a dataframe with the same name.
-# For example the file "UCI HAR Dataset/activity_labels.txt" is read into the
-# dataframe "activity_labels".
+# This loop reads the contents of each file into a data frame with the same
+# name. For example the file "UCI HAR Dataset/activity_labels.txt" is read into
+# the data frame "activity_labels".
 message("Loading data...")
 for (i in 1:length(var_names)) {
     # fread repeatedly crashed here, so use read.table instead.
@@ -145,7 +146,7 @@ rm("features", "end")
 #                                                                              #
 # The file "UCI HAR Dataset/activity_labels.txt" maps the codes used in the    #
 # data files to descriptive text labels. So use this to replace the codes in   #
-# our big_dt data table.                                                     #
+# our big_dt data table.                                                       #
 #                                                                              #
 #####                                                                      #####
 
@@ -167,7 +168,7 @@ rm(list=c("act_label", "activity_labels"))
 #                                                                              #
 # We're only interested in variables concerning means or standard deviations   #
 # (as well as the subject_id, activity label and data set label, of course).   #
-# So make a vector listing just that subset of "big_dt" columns and use it to  #
+# So make a vector listing just that subset of big_dt columns and use it to    #
 # extract those columns into a smaller data frame.                             #
 #                                                                              #
 # By inspection of the output of names(big_dt), we don't want just any         #
@@ -177,15 +178,15 @@ rm(list=c("act_label", "activity_labels"))
 # "mean" and "std" variables are the variables we need to select.              #
 #                                                                              #
 # In other cases some variables have the string "mean" in their names, but     #
-# there is no corresponding variable with "std" variable. For example,         #
+# there is no corresponding variable with the "std" string. For example,       #
 # angletBodyGyroJerkMean_gravityMean. We don't want these variables.           #
 #                                                                              #
 #####                                                                      #####
 
 
-# From experimentation, this regular expression will select our variable list:
-# an underscore, followed by the string "mean" or "std", followed by another
-# underscore or the end of the string.
+# From experimentation, this regular expression will select the variables we
+# want, and leave behind the others: an underscore, followed by the string
+# "mean" or "std", followed by another underscore or the end of the string.
 regexp <- "_(mean|std)(_|$)"
 subset <- grep(regexp, names(big_dt), ignore.case=TRUE, value=TRUE)
 
@@ -197,7 +198,7 @@ subset <- as.vector(rbind(mean_vec, std_vec))
 # Don't forget our subject/activity/data-set identifiers.
 subset <- c("subj_id", "activity", "set_label", subset)
 
-# Pull those columns from "big_dt".
+# Pull those columns from big_dt.
 smaller_dt <- select(big_dt, one_of(subset))
 
 rm(list=c("big_dt", "subset", "mean_vec", "std_vec", "regexp"))
@@ -207,14 +208,14 @@ rm(list=c("big_dt", "subset", "mean_vec", "std_vec", "regexp"))
 #####                  Average by Activity and Subject                     #####
 #                                                                              #
 # Use the dplyr function "summarise" to get the mean of each feature's mean    #
-# and standard deviation. Yes, we have a mean of a mean and a mean of std, but #
-# that's ok. Along the way, we'll lose the set_label column, but it won't be   #
-# missed, mostly it was good for debug.                                        #
+# and standard deviation. Yes, we have a mean of a mean and a mean of a std,   #
+# but that's ok. Along the way, we'll lose the set_label column, but it won't  #
+# be missed, mostly it was good for debug.                                     #
 #                                                                              #
 # To my mind, the long format makes more sense here than the wide format, so   #
-# use the tidyr packages gather() function to reshape the data.                #
+# use the tidyr package's functions to reshape the data.                       #
 #                                                                              #
-# Write this final data set to a text file.                                    #
+# Write this final data table to a text file.                                  #
 #                                                                              #
 #####                                                                      #####
 
@@ -235,8 +236,8 @@ setnames(averages_dt, names(averages_dt), new_names)
 # Now we can reshape the data from wide into long format.
 averages_dt %>%
     gather(feature_statistic, value, matches("<>(mean|std)")) %>%
-    separate(feature_statistic,c("feature","statistic"),sep="<>") %>%
+    separate(feature_statistic, c("feature","statistic"), sep="<>") %>%
     spread(statistic, value) -> final_dt
 
-# Write the results to a file. No need to clean up the last variables.
+# Write the results to a file. No need to clean up the remaining variables.
 write.table(final_dt, "Final.txt", sep="\t", row.names=FALSE, quote=FALSE)
