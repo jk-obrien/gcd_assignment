@@ -11,17 +11,19 @@ from that tidy data.
 To use this software download the data (see below) into the same directory as
 the R scripts and then call
 
-> R < run_analysis.R
+> R --slave < run_analysis.R
+
+The scipt requires the CRAN packages data.table, dplry and tidyr.
 
 The script file is fully commented, giving a detailed description of how it 
 works. The basic outline is this:
 
 1. Downloads the project data zip file and unzips it.
-2. Merges the training and test sets.
+2. Reads the data files then merges the training and test sets.
 3. Labels the data set variables.
 4. Replaces the activity codes in the data with descriptive text labels.
 5. Selects a subset of the data set variables.
-6. Produces averages of every numeric variable. 
+6. Reshapes the data into long format and produces averages of every feature. 
 
 The rest of this file gives a description of the scripts and files used in the
 project.

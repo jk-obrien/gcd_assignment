@@ -12,9 +12,13 @@
 # 5) From the data set in step 4, create a second, independent tidy data set
 #    with the average of each variable for each activity and each subject.
 
+# Load the libraries that we will need.
+library(data.table, warn.conflicts=FALSE)
+library(tidyr,      warn.conflicts=FALSE)
+library(dplyr,      warn.conflicts=FALSE)
 
 
-#####                            Get Data Files                            #####
+#####                           Get Data Files                             #####
 #                                                                              #
 # In this section the script looks for the project zip file and unzips it. If  #
 # the zip file is missing it downloads it from the original source and then    #
@@ -39,7 +43,7 @@ if (!file.exists(zip_file)) {
 
     # If not download it.
     message("Downloading...")
-    download.file(url, zip_file, method="curl")
+    download.file(url, zip_file, method="curl", quiet=TRUE)
 }
 
 # Then unzip the contents.
@@ -54,14 +58,15 @@ rm(list=c("url", "zip_file"))
 data_files <- list.files(getwd(), pattern="[.]txt$", recursive=TRUE)
 
 # A few .txt files aren't data files, so get rid of those.
-data_files <- data_files[grep("CodeBook|README|_info", data_files, invert=TRUE)]
+data_files <-
+    data_files[grep("CodeBook|README|_info|Final", data_files, invert=TRUE)]
 
 # And some .txt files aren't needed (too low-level) for this assignment.
 data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
 
 
 
-#####                              Merge Data                              #####
+#####                             Merge Data                               #####
 #                                                                              #
 # In this section the script reads all the text files into R objects. Since    #
 # the basenames of the text files are unique, the script uses these to name    #
@@ -86,6 +91,9 @@ for (i in 1:length(var_names)) {
     assign(var_names[i], read.table(data_files[i]))
 }
 
+# This last status message to the user covers everything from here on.
+message("Processing...")
+
 # Tidy as we go.
 rm(list=c("var_names", "data_files", "i"))
 
@@ -93,7 +101,6 @@ rm(list=c("var_names", "data_files", "i"))
 # Now we have all our data, it's time to start merging it together. The two
 # main objects are X_test and X_train. We need to include columns for a subject
 # id, an activity id, and a label for the data set (test/train).
-library(data.table)
 big_dt <- data.table(
     subj_id     = c(subject_test$V1, subject_train$V1),
     activity_id = c(y_test$V1,       y_train$V1),
@@ -110,7 +117,7 @@ rm(list=c("X_train", "y_train","subject_train",
 
 
 
-#####                          Set Variable Names                          #####
+#####                         Set Variable Names                           #####
 #                                                                              #
 # The file "UCI HAR Dataset/features.txt" holds the variable names for X_test  #
 # and X_train, but they need a little cleaning up.                             #
@@ -149,7 +156,6 @@ act_label <- activity_labels$V2[big_dt$activity_id]
 
 # Add the new column to the big_dt data table and remove the activity_id
 # column.
-library(dplyr)
 big_dt <- mutate(big_dt, activity=act_label, activity_id=NULL)
 
 # Keep things tidy.
@@ -194,15 +200,19 @@ subset <- c("subj_id", "activity", "set_label", subset)
 # Pull those columns from "big_dt".
 smaller_dt <- select(big_dt, one_of(subset))
 
-rm(list=c("big_dt", "subset", "mean_vec", "std_vec"))
+rm(list=c("big_dt", "subset", "mean_vec", "std_vec", "regexp"))
 
 
 
-#####                   Average by Activity and Subject                    #####
+#####                  Average by Activity and Subject                     #####
 #                                                                              #
-# Use the dplyr function "summarise_each to get the mean of each column,       #
-# except the two grouping columns, subj_id and activity and the set_label      #
-# column which is a character vector.                                          #
+# Use the dplyr function "summarise" to get the mean of each feature's mean    #
+# and standard deviation. Yes, we have a mean of a mean and a mean of std, but #
+# that's ok. Along the way, we'll lose the set_label column, but it won't be   #
+# missed, mostly it was good for debug.                                        #
+#                                                                              #
+# To my mind, the long format makes more sense here than the wide format, so   #
+# use the tidyr packages gather() function to reshape the data.                #
 #                                                                              #
 # Write this final data set to a text file.                                    #
 #                                                                              #
@@ -210,8 +220,23 @@ rm(list=c("big_dt", "subset", "mean_vec", "std_vec"))
 
 
 
+# Summarise by means.
 averages_dt <- smaller_dt %>%
-               group_by(subj_id, activity) %>%
-               summarise_each(funs(mean), -set_label)
+    group_by(subj_id, activity) %>%
+    summarise_each(funs(mean), -set_label)
 
-write.table(averages_dt, "Final.txt", sep="\t", row.names=FALSE)
+
+# To help us reshape we need to rename the feature columns so that the
+# "mean"/"std" strings are at the end of the names, separated by something
+# distinctive.
+new_names <- sub("_(mean|std)(.*)", "\\2<>\\1", names(averages_dt))
+setnames(averages_dt, names(averages_dt), new_names)
+
+# Now we can reshape the data from wide into long format.
+averages_dt %>%
+    gather(feature_statistic, value, matches("<>(mean|std)")) %>%
+    separate(feature_statistic,c("feature","statistic"),sep="<>") %>%
+    spread(statistic, value) -> final_dt
+
+# Write the results to a file. No need to clean up the last variables.
+write.table(final_dt, "Final.txt", sep="\t", row.names=FALSE, quote=FALSE)

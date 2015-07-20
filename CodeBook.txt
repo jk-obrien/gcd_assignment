@@ -2,17 +2,17 @@ This file describes the variables in the output file (Final.txt).
 
 subj_id     - Unique identifier for study subject.
 activity    - Descriptive label for measured activity.
+feature     - The feature that was measured - see below.
+mean        - Mean of the measured feature, averaged per subject and activity.
+std         - Standard deviation, averaged per subject and activity.
 
-The following description of the remaining variables in Final.out is taken from
-the file features_info.txt supplied with the raw data.
 
-While this description applies to the input data for this project, the same
-labels (with slight changes to punctuation characters) are used to denote the
-means of the variables calculated per subject and per activity in this project.
+The following description of the features is taken from the file
+features_info.txt supplied with the raw data.
 
 ================================================================================
 The features selected for this database come from the accelerometer and
-gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals
+gyroscope 3-axial raw signals, tAcc-XYZ and tGyro-XYZ. These time domain signals
 (prefix 't' to denote time) were captured at a constant rate of 50 Hz. Then they
 were filtered using a median filter and a 3rd order low pass Butterworth filter
 with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration
@@ -34,75 +34,40 @@ signals).
 These signals were used to estimate variables of the feature vector for each
 pattern: '-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
 
-The set of variables that were estimated from these signals are:
-
-mean(): Mean value
-std(): Standard deviation
 ================================================================================
 
-tBodyAcc_mean_X
-tBodyAcc_std_X
-tBodyAcc_mean_Y
-tBodyAcc_std_Y
-tBodyAcc_mean_Z
-tBodyAcc_std_Z
-tGravityAcc_mean_X
-tGravityAcc_std_X
-tGravityAcc_mean_Y
-tGravityAcc_std_Y
-tGravityAcc_mean_Z
-tGravityAcc_std_Z
-tBodyAccJerk_mean_X
-tBodyAccJerk_std_X
-tBodyAccJerk_mean_Y
-tBodyAccJerk_std_Y
-tBodyAccJerk_mean_Z
-tBodyAccJerk_std_Z
-tBodyGyro_mean_X
-tBodyGyro_std_X
-tBodyGyro_mean_Y
-tBodyGyro_std_Y
-tBodyGyro_mean_Z
-tBodyGyro_std_Z
-tBodyGyroJerk_mean_X
-tBodyGyroJerk_std_X
-tBodyGyroJerk_mean_Y
-tBodyGyroJerk_std_Y
-tBodyGyroJerk_mean_Z
-tBodyGyroJerk_std_Z
-tBodyAccMag_mean
-tBodyAccMag_std
-tGravityAccMag_mean
-tGravityAccMag_std
-tBodyAccJerkMag_mean
-tBodyAccJerkMag_std
-tBodyGyroMag_mean
-tBodyGyroMag_std
-tBodyGyroJerkMag_mean
-tBodyGyroJerkMag_std
-fBodyAcc_mean_X
-fBodyAcc_std_X
-fBodyAcc_mean_Y
-fBodyAcc_std_Y
-fBodyAcc_mean_Z
-fBodyAcc_std_Z
-fBodyAccJerk_mean_X
-fBodyAccJerk_std_X
-fBodyAccJerk_mean_Y
-fBodyAccJerk_std_Y
-fBodyAccJerk_mean_Z
-fBodyAccJerk_std_Z
-fBodyGyro_mean_X
-fBodyGyro_std_X
-fBodyGyro_mean_Y
-fBodyGyro_std_Y
-fBodyGyro_mean_Z
-fBodyGyro_std_Z
-fBodyAccMag_mean
-fBodyAccMag_std
-fBodyBodyAccJerkMag_mean
-fBodyBodyAccJerkMag_std
-fBodyBodyGyroMag_mean
-fBodyBodyGyroMag_std
-fBodyBodyGyroJerkMag_mean
-fBodyBodyGyroJerkMag_std
+This is the list of features included in the final output file.
+
+tBodyAcc_X
+tBodyAcc_Y
+tBodyAcc_Z
+tGravityAcc_X
+tGravityAcc_Y
+tGravityAcc_Z
+tBodyAccJerk_X
+tBodyAccJerk_Y
+tBodyAccJerk_Z
+tBodyGyro_X
+tBodyGyro_Y
+tBodyGyro_Z
+tBodyGyroJerk_X
+tBodyGyroJerk_Y
+tBodyGyroJerk_Z
+tBodyAccMag
+tGravityAccMag
+tBodyAccJerkMag
+tBodyGyroMag
+tBodyGyroJerkMag
+fBodyAcc_X
+fBodyAcc_Y
+fBodyAcc_Z
+fBodyAccJerk_X
+fBodyAccJerk_Y
+fBodyAccJerk_Z
+fBodyGyro_X
+fBodyGyro_Y
+fBodyGyro_Z
+fBodyAccMag
+fBodyBodyAccJerkMag
+fBodyBodyGyroMag
+fBodyBodyGyroJerkMag
