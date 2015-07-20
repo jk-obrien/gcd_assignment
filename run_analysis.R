@@ -13,6 +13,7 @@
 #    with the average of each variable for each activity and each subject.
 
 
+
 #####                            Get Data Files                            #####
 #                                                                              #
 # In this section the script looks for the project zip file and unzips it. If  #
@@ -22,6 +23,7 @@
 # It expects to find the files in the current working directory - getwd().     #
 #                                                                              #
 #####                                                                      #####
+
 
 
 # First define two constants, holding the relative path to the zip file, and
@@ -71,6 +73,7 @@ data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
 #####                                                                      #####
 
 
+
 # Make a list of the basenames of the files - without the .txt extension.
 var_names <- sub("([^.]+)[.]txt$", "\\1", basename(data_files))
 
@@ -115,10 +118,11 @@ rm(list=c("X_train", "y_train","subject_train",
 #####                                                                      #####
 
 
+
 # Remove parentheses from the feature names.
 features <- gsub("[()]", "",  features$V2)
 
-# Replace commas and hypens with underscores.
+# Replace commas and hyphens with underscores.
 features <- gsub("[,-]", "_", features)
 
 # We already have names for the first three columns.
@@ -129,18 +133,21 @@ setnames(big_dt, names(big_dt)[4:end], features)
 rm("features", "end")
 
 
+
 #####                     Descriptive Activity Labels                      #####
 #                                                                              #
 # The file "UCI HAR Dataset/activity_labels.txt" maps the codes used in the    #
 # data files to descriptive text labels. So use this to replace the codes in   #
-# our "big_dt" data table.                                                     #
+# our big_dt data table.                                                     #
 #                                                                              #
 #####                                                                      #####
+
+
 
 # Map the activity labels to the id codes in a new vector.
 act_label <- activity_labels$V2[big_dt$activity_id]
 
-# Add the new column to the "big_dt" data table and remove the activity_id
+# Add the new column to the big_dt data table and remove the activity_id
 # column.
 library(dplyr)
 big_dt <- mutate(big_dt, activity=act_label, activity_id=NULL)
@@ -157,7 +164,7 @@ rm(list=c("act_label", "activity_labels"))
 # So make a vector listing just that subset of "big_dt" columns and use it to  #
 # extract those columns into a smaller data frame.                             #
 #                                                                              #
-# By inspection of the output of names(big_dt), we don't just want any         #
+# By inspection of the output of names(big_dt), we don't want just any         #
 # variable with the string "mean" in its name. There are many cases of         #
 # variables with the same root name but differing by the name of a summary     #
 # statistic, e.g. tBodyAcc_mean_Y, tBodyAcc_std_Y, tBodyAcc_min_Y, etc. These  #
@@ -201,9 +208,10 @@ rm(list=c("big_dt", "subset", "mean_vec", "std_vec"))
 #                                                                              #
 #####                                                                      #####
 
+
+
 averages_dt <- smaller_dt %>%
                group_by(subj_id, activity) %>%
                summarise_each(funs(mean), -set_label)
 
 write.table(averages_dt, "final_output.txt", sep="\t", row.names=FALSE)
-
