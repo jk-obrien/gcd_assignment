@@ -8,7 +8,8 @@ std         - Standard deviation, averaged per subject and activity.
 
 
 The following description of the features is taken from the file
-features_info.txt supplied with the raw data.
+features_info.txt supplied with the raw data. The text explains how to
+determine what each feature is based on its name.
 
 As, per the raw data README.txt, the features were all normalized they, their
 means and their standard  deviations are all unitless.
