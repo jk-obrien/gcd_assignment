@@ -1,11 +1,11 @@
 # Project Description
 
 The files in this repository were submitted to meet the requirements for the
-course project in the "Getting and Cleaning Data" module of the Coursera [Data 
+course project in the "Getting and Cleaning Data" module of the Coursera [Data
 Science](https://www.coursera.org/specialization/jhudatascience/1) specialization.
 
 The general aim of the assignment is to read various datafiles, arrange the data
-therein according to the principles of tidy data and to create a summary table 
+therein according to the principles of tidy data and to create a summary table
 from that tidy data.
 
 To use this software download the data (see below) into the same directory as
@@ -15,18 +15,18 @@ the R scripts and then call
 
 The scipt requires the CRAN packages data.table, dplry and tidyr.
 
-The script file is fully commented, giving a detailed description of how it 
+The script file is fully commented, giving a detailed description of how it
 works. The basic outline is this:
 
 1. Downloads the project data zip file and unzips it.
 2. Reads the data files into memory then merges the training and test sets.
-3. Labels the data set variables (columns) using features.txt.
+3. Labels the data set variables (columns) with meaningful names.
 4. Replaces the activity codes in the data with descriptive text labels.
-5. Selects the subset of the data set variables that give means and standard
-   deviations for the features.
-6. Produces averages of every feature's mean and std by subject and activity.
+5. Selects the subset of the data set variables that hold means and standard
+   deviations.
+6. Produces averages of those variables, grouped by subject and activity.
 7. Reshapes the data into long format, using subject_id, activity and feature as
-   key variables and the two mean statistic columns as values.
+   key variables and the average mean and average standard deviation columns as values.
 8. Saves the output of step 7 into a tab-delimited text file called Final.txt.
 
 The rest of this file gives a description of the scripts and files used in the
@@ -37,7 +37,7 @@ project.
 
 The data files were downloaded from [here](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip).
 
-The download was unzipped and contained a directory tree of various text files 
+The download was unzipped and contained a directory tree of various text files
 containing the project data and descriptions of the data. The data files are not
 included in the github repository for this project. Only the files relevant to
 this project are described here. A full description of the entire dataset can be
