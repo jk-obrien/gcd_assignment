@@ -11,6 +11,10 @@ The following description of the features is taken from the file
 features_info.txt supplied with the raw data. The text explains how to
 determine what each feature is based on its name.
 
+Note that the last three variables contain the string "BodyBody" and it is
+difficult to see an explanation of this in the text below. It seems likely that
+this results from a typographical error and that it should simply read "Body".
+
 As, per the raw data README.txt, the features were all normalized they, their
 means and their standard  deviations are all unitless.
 
