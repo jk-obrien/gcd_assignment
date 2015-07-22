@@ -13,7 +13,11 @@ the R scripts and then call
 
 > R --slave < run_analysis.R
 
-The scipt requires the CRAN packages data.table, dplry and tidyr.
+The scipt uses the following CRAN packages (and versions):
+
+* data.table v1.9.4 
+* dplry v0.4.2
+* tidyr v0.2.0
 
 The script file is fully commented, giving a detailed description of how it
 works. The basic outline is this:
