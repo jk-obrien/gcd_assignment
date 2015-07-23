@@ -62,7 +62,7 @@ data_files <- list.files(getwd(), pattern="[.]txt$", recursive=TRUE)
 data_files <-
     data_files[grep("CodeBook|README|_info|Final", data_files, invert=TRUE)]
 
-# And some .txt files aren't needed (too low-level) for this assignment.
+# And some data files aren't needed (too low-level) for this assignment.
 data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
 
 
@@ -81,7 +81,7 @@ data_files <- data_files[grep("Inertial", data_files, invert=TRUE)]
 
 
 # Make a list of the base names of the files - without the .txt extension.
-var_names <- sub("([^.]+)[.]txt$", "\\1", basename(data_files))
+var_names <- sub("(.+)[.]txt$", "\\1", basename(data_files))
 
 # This loop reads the contents of each file into a data frame with the same
 # name. For example the file "UCI HAR Dataset/activity_labels.txt" is read into
