@@ -4,12 +4,22 @@ The files in this repository were submitted to meet the requirements for the
 course project in the "Getting and Cleaning Data" module of the Coursera [Data
 Science](https://www.coursera.org/specialization/jhudatascience/1) specialization.
 
-The general aim of the assignment is to read various datafiles, arrange the data
-therein according to the principles of tidy data and to create a summary table
-from that tidy data.
+The general aim of the assignment is to read various data files, arrange the 
+data therein according to the principles of tidy data and to create a summary table from that tidy data.
 
-To use this software download the data (see below) into the same directory as
-the R scripts and then call
+The data are available in zip format from this address:
+
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+
+If you have a working internet connection, the script will download and unpack
+the data files it needs itself. If you do not have an internet connection or, if
+for some reason the script fails at that step, you can download the file from
+the above address (from another computer that does have internet connection if
+need be) and copy it to your computer. If you do have to download the data
+yourself, you should call the script from the same directory that holds the 
+data.
+
+Then, to use this software call:
 
 > R --slave < run_analysis.R
 
